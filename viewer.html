@@ -4,42 +4,36 @@
   <title>Live Laptop Location</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Firebase v8 SDK -->
+  <!-- Firebase SDK v8 -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-  
-  <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
   <style>
+    #map {
+      height: 90vh;
+      width: 100%;
+    }
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
     }
-
-    h2 {
-      text-align: center;
-      margin: 10px;
-    }
-
-    #map {
-      height: 90vh;
-      width: 100%;
-    }
   </style>
 </head>
 <body>
 
-  <h2>📍 Live Laptop Location Tracker</h2>
-  <div id="map"></div>
+<h2 style="text-align:center;">📍 Live Laptop Location Tracker</h2>
+<div id="map"></div>
 
-  <script>
-    // ✅ Add your actual Firebase config here:
-    const firebaseConfig = {
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+<script>
+  // ✅ Your Firebase Config
+  const firebaseConfig = {
     apiKey: "AIzaSyATBAB3rhRkN1H7zL08CfwNUL0f91AMmPw",
     authDomain: "loc-try-at-ion.firebaseapp.com",
     databaseURL: "https://loc-try-at-ion-default-rtdb.firebaseio.com",
@@ -50,43 +44,37 @@
     measurementId: "G-3R9Q69XNCX"
   };
 
-    // ✅ Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+  // ✅ Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
 
-    // ✅ Create Leaflet map centered at default India location
-    const map = L.map('map').setView([20.5937, 78.9629], 5);
+  // ✅ Initialize Map
+  const map = L.map('map').setView([20.5937, 78.9629], 5); // Center on India initially
 
-    // ✅ Add OpenStreetMap tiles
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
 
-    let marker;
+  let marker;
 
-    // ✅ Fetch live data from Firebase
-    const locRef = db.ref('laptop_location');
-    locRef.on('value', (snapshot) => {
-      const data = snapshot.val();
-      if (data && data.lat && data.lng) {
-        const lat = data.lat;
-        const lng = data.lng;
+  // ✅ Listen to Firebase Updates
+  const locRef = db.ref('laptop_location');
+  locRef.on('value', (snapshot) => {
+    const data = snapshot.val();
+    if (data && data.lat && data.lng) {
+      const lat = data.lat;
+      const lng = data.lng;
 
-        if (marker) {
-          marker.setLatLng([lat, lng]);
-        } else {
-          marker = L.marker([lat, lng]).addTo(map)
-            .bindPopup("📍 Laptop Location")
-            .openPopup();
-        }
-
-        map.setView([lat, lng], 15);
+      if (marker) {
+        marker.setLatLng([lat, lng]);
       } else {
-        console.log("Location data not available yet");
+        marker = L.marker([lat, lng]).addTo(map).bindPopup("📍 Laptop Location").openPopup();
       }
-    });
-  </script>
+
+      map.setView([lat, lng], 15);
+    }
+  });
+</script>
 
 </body>
 </html>
-
