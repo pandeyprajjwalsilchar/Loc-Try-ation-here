@@ -28,10 +28,8 @@
 <body>
 
 <h2 style="text-align:center;">📍 Live Laptop Location Tracker</h2>
-<div id="map" style="height: 500px;"></div>
+<div id="map"></div>
 
-<!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
 <script>
   // ✅ Your Firebase Config
@@ -63,6 +61,7 @@
   const locRef = db.ref('laptop_location');
   locRef.on('value', (snapshot) => {
     const data = snapshot.val();
+    console.log("Firebase Data:", data);
     if (data && data.lat && data.lng) {
       const lat = data.lat;
       const lng = data.lng;
