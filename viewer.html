@@ -56,14 +56,14 @@
   }).addTo(map);
 
   let marker;
-  
+
   // ✅ Listen to Firebase Updates
   const locRef = db.ref('laptop_location');
   locRef.on('value', (snapshot) => {
     const data = snapshot.val();
     if (data && data.lat && data.lng) {
-      const lat = 26.00856280189946;
-      const lng = 82.369803590541;
+      const lat = data.lat;
+      const lng = data.lng;
 
       if (marker) {
         marker.setLatLng([lat, lng]);
